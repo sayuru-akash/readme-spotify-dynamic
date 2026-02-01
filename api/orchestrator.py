@@ -43,7 +43,7 @@ app = Flask(__name__)
 class ImageData:
     """
     Container for image data and extracted color palettes.
-    
+
     Fetches image once and caches the bytes for reuse.
     """
 
@@ -95,10 +95,10 @@ class ImageData:
 def load_image_with_fallback(url: str) -> Tuple[str, ColorPalette, ColorPalette]:
     """
     Load image and extract color palettes, with fallback handling.
-    
+
     Args:
         url: URL to the album art image
-        
+
     Returns:
         Tuple of (base64_image, bar_palette, song_palette)
     """
@@ -145,18 +145,18 @@ def generate_bar_css(
 ) -> str:
     """
     Generate CSS for the equalizer bars animation, synced to BPM.
-    
+
     Args:
         bar_count: Number of equalizer bars to generate
         beat_duration_ms: Duration of one beat in milliseconds
         energy: Track energy (0-1), affects animation intensity
         danceability: Track danceability (0-1), affects animation smoothness
-        
+
     Returns:
         CSS string for bar positioning and animation
     """
     css_rules: list[str] = []
-    
+
     # Calculate total width and center offset
     total_width = bar_count * svg_config.bar_spacing
     container_width = 330  # max-width of content area
@@ -165,7 +165,7 @@ def generate_bar_css(
 
     # Scale animation based on energy (more energy = faster, more dramatic)
     energy_factor = 0.5 + (energy * 0.5)  # 0.5 to 1.0
-    
+
     # Danceability affects the animation curve (more danceable = bouncier)
     bounce_factor = 0.3 + (danceability * 0.7)  # 0.3 to 1.0
 
@@ -173,15 +173,17 @@ def generate_bar_css(
         # Base animation on beat duration with variation
         # Add slight randomness but keep it roughly on beat
         beat_variance = random.uniform(0.8, 1.2)
-        anim_duration = int(beat_duration_ms * beat_variance * (2 - energy_factor))
-        
+        anim_duration = int(beat_duration_ms *
+                            beat_variance * (2 - energy_factor))
+
         # Clamp to reasonable range
         anim_duration = max(200, min(anim_duration, 1500))
 
         # Create cubic-bezier based on danceability
         # Higher danceability = more bouncy (overshoot) curves
         x1 = random.uniform(0.1, 0.4)
-        y1 = random.uniform(0.0, bounce_factor * 1.5)  # Overshoot based on danceability
+        # Overshoot based on danceability
+        y1 = random.uniform(0.0, bounce_factor * 1.5)
         x2 = random.uniform(0.4, 0.8)
         y2 = random.uniform(0.8, 1.0 + bounce_factor * 0.5)
 
@@ -204,10 +206,10 @@ def generate_bar_css(
 def generate_bar_html(bar_count: int) -> str:
     """
     Generate HTML for equalizer bars.
-    
+
     Args:
         bar_count: Number of bars to generate
-        
+
     Returns:
         HTML string containing bar divs
     """
@@ -217,14 +219,15 @@ def generate_bar_html(bar_count: int) -> str:
 def get_template_name() -> str:
     """
     Get the current theme template name from configuration.
-    
+
     Returns:
         Template filename
     """
     try:
         with open(template_config.config_path, "r", encoding="utf-8") as f:
             templates = json.load(f)
-            theme = templates.get("current-theme", template_config.default_theme)
+            theme = templates.get(
+                "current-theme", template_config.default_theme)
             return templates.get("templates", {}).get(theme, template_config.fallback_theme)
     except (OSError, json.JSONDecodeError) as e:
         print(f"Failed to load templates: {e}")
@@ -234,10 +237,10 @@ def get_template_name() -> str:
 def escape_xml(text: str) -> str:
     """
     Escape special characters for XML/SVG compatibility.
-    
+
     Args:
         text: Text to escape
-        
+
     Returns:
         Escaped text safe for XML
     """
@@ -253,7 +256,7 @@ def make_svg(
 ) -> str:
     """
     Generate SVG widget from normalized track data.
-    
+
     Args:
         track_data: Normalized track data dict with keys:
             - is_playing: bool
@@ -267,7 +270,7 @@ def make_svg(
         border_color: Hex color for border (without #)
         background_type: Type of background ("color", "blur_dark", "blur_light")
         show_status: Whether to show "Vibing to:" / "Recently played:" text
-    
+
     Returns:
         Rendered SVG template string
     """
@@ -278,13 +281,15 @@ def make_svg(
     audio_features = track_data.get("audio_features") or {}
     tempo = audio_features.get("tempo", svg_config.default_tempo)
     energy = audio_features.get("energy", svg_config.default_energy)
-    danceability = audio_features.get("danceability", svg_config.default_danceability)
+    danceability = audio_features.get(
+        "danceability", svg_config.default_danceability)
 
     # Calculate beat duration from BPM
     beat_duration_ms = int(60000 / tempo) if tempo > 0 else 500
 
     # Generate bar CSS with audio features
-    bar_css = generate_bar_css(bar_count, beat_duration_ms, energy, danceability)
+    bar_css = generate_bar_css(
+        bar_count, beat_duration_ms, energy, danceability)
 
     # Set status text based on playing state
     is_playing = track_data.get("is_playing", False)
@@ -352,13 +357,13 @@ def make_svg(
 def get_active_service() -> Tuple[str, Any]:
     """
     Determine which music service to use based on environment variables.
-    
+
     Returns 'spotify' if Spotify is configured, 'lastfm' if Last.fm is configured.
     Defaults to Spotify if both are configured.
-    
+
     Returns:
         Tuple of (service_name, service_module)
-        
+
     Raises:
         ServiceNotConfiguredError: If no service is configured
     """
@@ -381,11 +386,11 @@ def get_active_service() -> Tuple[str, Any]:
 def make_error_svg(message: str, status_code: int = 500) -> Response:
     """
     Generate an error SVG response.
-    
+
     Args:
         message: Error message to display
         status_code: HTTP status code
-        
+
     Returns:
         Flask Response with error SVG
     """
@@ -417,12 +422,15 @@ def catch_all(path: str) -> Response:
     raw_border = request.args.get("border_color", "")
     raw_bg_type = request.args.get("background_type", "")
 
-    background_color = validate_hex_color(raw_background, svg_config.default_background)
+    background_color = validate_hex_color(
+        raw_background, svg_config.default_background)
     border_color = validate_hex_color(raw_border, svg_config.default_border)
-    background_type = validate_background_type(raw_bg_type, svg_config.default_background_type)
+    background_type = validate_background_type(
+        raw_bg_type, svg_config.default_background_type)
 
     # Optional parameters
-    show_status = request.args.get("show_status", "").lower() in ("true", "1", "yes")
+    show_status = request.args.get(
+        "show_status", "").lower() in ("true", "1", "yes")
 
     try:
         service_name, service = get_active_service()
@@ -436,7 +444,8 @@ def catch_all(path: str) -> Response:
     except Exception as e:
         return make_error_svg(f"Error: {str(e)}", 500)
 
-    svg = make_svg(track_data, background_color, border_color, background_type, show_status)
+    svg = make_svg(track_data, background_color,
+                   border_color, background_type, show_status)
 
     resp = Response(svg, mimetype="image/svg+xml")
     resp.headers["Cache-Control"] = "s-maxage=1"
