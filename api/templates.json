@@ -1,8 +1,9 @@
 {
-    "current-theme": "dark",
+    "current-theme": "github",
     "templates": {
         "light": "spotify.html.j2",
         "dark": "spotify-dark.html.j2",
-        "base": "base.html.j2"
+        "base": "base.html.j2",
+        "github": "github-compatible.html.j2"
     }
 }

@@ -1,0 +1,42 @@
+<svg width="480" height="133" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Background -->
+    <rect width="480" height="133" rx="5" fill="#{{ background_color }}" stroke="#{{ border_color }}" stroke-width="1"/>
+    
+    <!-- Album Art -->
+    <image x="15" y="16.5" width="100" height="100" href="data:image/png;base64,{{ image }}" preserveAspectRatio="xMidYMid slice">
+        <animate attributeName="opacity" values="0;1" dur="0.3s" fill="freeze"/>
+    </image>
+    
+    <!-- Song Title -->
+    <text x="130" y="45" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="rgb({{ song_palette[1][0] }}, {{ song_palette[1][1] }}, {{ song_palette[1][2] }})">
+        {{ track_name | truncate(30) | e }}
+    </text>
+    
+    <!-- Artist Name -->
+    <text x="130" y="68" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" fill="rgb({{ song_palette[0][0] }}, {{ song_palette[0][1] }}, {{ song_palette[0][2] }})" opacity="0.8">
+        {{ artist_name | truncate(35) | e }}
+    </text>
+    
+    <!-- Status (if enabled) -->
+    {% if show_status %}
+    <text x="130" y="90" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" fill="rgb({{ song_palette[1][0] }}, {{ song_palette[1][1] }}, {{ song_palette[1][2] }})" opacity="0.7">
+        {{ status }}
+    </text>
+    {% endif %}
+    
+    <!-- Animated Equalizer Bars -->
+    <g transform="translate(130, 95)">
+        {% for i in range(8) %}
+        <rect x="{{ i * 12 }}" y="0" width="8" height="20" rx="2" fill="rgb({{ bar_palette[i % 4][0] }}, {{ bar_palette[i % 4][1] }}, {{ bar_palette[i % 4][2] }})" opacity="0.8">
+            <animate attributeName="height" 
+                     values="5;20;8;20;5" 
+                     dur="{{ (500 + (i * 50)) }}ms" 
+                     repeatCount="indefinite"/>
+            <animate attributeName="y" 
+                     values="15;0;12;0;15" 
+                     dur="{{ (500 + (i * 50)) }}ms" 
+                     repeatCount="indefinite"/>
+        </rect>
+        {% endfor %}
+    </g>
+</svg>
