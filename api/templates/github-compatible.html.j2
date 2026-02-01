@@ -1,34 +1,30 @@
 <svg width="480" height="133" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <defs>
-        <!-- Modern gradient background -->
+        <!-- Rich dark gradient -->
         <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#0d1117;stop-opacity:1" />
-            <stop offset="50%" style="stop-color:#161b22;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#0d1117;stop-opacity:1" />
+            <stop offset="0%" style="stop-color:#0a0e13;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#151a21;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#0a0e13;stop-opacity:1" />
         </linearGradient>
         
-        <!-- Spotify gradient -->
+        <!-- Vibrant Spotify green -->
         <linearGradient id="spotifyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#1ed760;stop-opacity:1">
-                <animate attributeName="stop-opacity" values="1;0.8;1" dur="2s" repeatCount="indefinite"/>
-            </stop>
-            <stop offset="100%" style="stop-color:#1DB954;stop-opacity:1">
-                <animate attributeName="stop-opacity" values="1;0.9;1" dur="2s" repeatCount="indefinite"/>
-            </stop>
+            <stop offset="0%" style="stop-color:#1fdf64;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#1db954;stop-opacity:1" />
         </linearGradient>
         
-        <!-- Blue gradient for recently played -->
+        <!-- Bright blue gradient -->
         <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style="stop-color:#58a6ff;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#388bfd;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#79c0ff;stop-opacity:1" />
         </linearGradient>
         
-        <!-- Premium album shadow -->
+        <!-- Premium shadow -->
         <filter id="albumShadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
-            <feOffset dx="0" dy="3" result="offsetblur"/>
+            <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
+            <feOffset dx="0" dy="4" result="offsetblur"/>
             <feComponentTransfer>
-                <feFuncA type="linear" slope="0.35"/>
+                <feFuncA type="linear" slope="0.4"/>
             </feComponentTransfer>
             <feMerge>
                 <feMergeNode/>
@@ -36,10 +32,10 @@
             </feMerge>
         </filter>
         
-        <!-- Bar glow effect -->
+        <!-- Vibrant bar glow -->
         <filter id="barGlow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feFlood flood-color="rgb({{ bar_palette[1][0] }}, {{ bar_palette[1][1] }}, {{ bar_palette[1][2] }})" result="color"/>
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feFlood flood-color="rgb({{ bar_palette[1][0] }}, {{ bar_palette[1][1] }}, {{ bar_palette[1][2] }})" flood-opacity="0.6" result="color"/>
             <feComposite in="color" in2="blur" operator="in" result="glow"/>
             <feMerge>
                 <feMergeNode in="glow"/>
@@ -47,151 +43,146 @@
             </feMerge>
         </filter>
         
-        <!-- Text shadow -->
-        <filter id="textShadow">
-            <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000" flood-opacity="0.5"/>
+        <!-- Text glow -->
+        <filter id="textGlow">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.7"/>
         </filter>
         
-        <!-- Album clip path -->
+        <!-- Album clip -->
         <clipPath id="albumClip">
-            <rect x="16" y="16" width="101" height="101" rx="12"/>
+            <rect x="15" y="15" width="103" height="103" rx="14"/>
         </clipPath>
     </defs>
     
     <!-- Background -->
-    <rect width="480" height="133" rx="11" fill="url(#bgGrad)"/>
+    <rect width="480" height="133" rx="12" fill="url(#bgGrad)"/>
     
-    <!-- Outer glow border -->
+    <!-- Glow border -->
     {% if is_playing %}
-    <rect x="0.5" y="0.5" width="479" height="132" rx="10.5" fill="none" stroke="url(#spotifyGrad)" stroke-width="2.5" opacity="0.6">
-        <animate attributeName="stroke-width" values="2.5;3;2.5" dur="2s" repeatCount="indefinite"/>
+    <rect x="1" y="1" width="478" height="131" rx="11" fill="none" stroke="url(#spotifyGrad)" stroke-width="2.5">
+        <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="stroke-width" values="2.5;3.5;2.5" dur="2s" repeatCount="indefinite"/>
     </rect>
     {% else %}
-    <rect x="0.5" y="0.5" width="479" height="132" rx="10.5" fill="none" stroke="#30363d" stroke-width="2"/>
+    <rect x="1" y="1" width="478" height="131" rx="11" fill="none" stroke="#30363d" stroke-width="2"/>
     {% endif %}
     
-    <!-- Inner border accent -->
-    <rect x="2" y="2" width="476" height="129" rx="9" fill="none" stroke="#21262d" stroke-width="1" opacity="0.4"/>
+    <!-- Inner subtle accent -->
+    <rect x="3" y="3" width="474" height="127" rx="10" fill="none" stroke="#1c2128" stroke-width="1" opacity="0.6"/>
     
-    <!-- Album art with premium shadow -->
+    <!-- Album art -->
     <g filter="url(#albumShadow)">
-        <image x="16" y="16" width="101" height="101" href="data:image/png;base64,{{ image }}" 
+        <image x="15" y="15" width="103" height="103" href="data:image/png;base64,{{ image }}" 
                preserveAspectRatio="xMidYMid slice" clip-path="url(#albumClip)">
-            <animate attributeName="opacity" values="0;1" dur="0.5s" fill="freeze"/>
+            <animate attributeName="opacity" values="0;1" dur="0.6s" fill="freeze"/>
         </image>
     </g>
     
-    <!-- Subtle accent line next to album -->
+    <!-- Accent bar -->
     {% if is_playing %}
-    <rect x="125" y="26" width="3" height="81" rx="1.5" fill="url(#spotifyGrad)">
-        <animate attributeName="height" values="81;91;81" dur="3s" repeatCount="indefinite"/>
-        <animate attributeName="y" values="26;21;26" dur="3s" repeatCount="indefinite"/>
+    <rect x="127" y="25" width="3" height="83" rx="1.5" fill="url(#spotifyGrad)" opacity="0.9">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
     </rect>
     {% endif %}
     
-    <!-- Content area -->
-    <g transform="translate(140, 0)">
+    <!-- Content -->
+    <g transform="translate(145, 0)">
         
-        <!-- Status badge - redesigned -->
+        <!-- Status badge -->
         {% if is_playing %}
-        <g transform="translate(0, 22)">
-            <!-- Background with gradient -->
-            <defs>
-                <linearGradient id="badgeBg" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#1DB954;stop-opacity:0.15" />
-                    <stop offset="100%" style="stop-color:#1ed760;stop-opacity:0.15" />
-                </linearGradient>
-            </defs>
-            <rect x="-2" y="-12" width="108" height="24" rx="12" fill="url(#badgeBg)"/>
-            <rect x="-2" y="-12" width="108" height="24" rx="12" fill="none" stroke="url(#spotifyGrad)" stroke-width="1.5" opacity="0.3"/>
+        <g transform="translate(0, 23)">
+            <!-- Glowing background -->
+            <rect x="-3" y="-13" width="112" height="26" rx="13" fill="#1db954" opacity="0.08">
+                <animate attributeName="opacity" values="0.08;0.15;0.08" dur="2s" repeatCount="indefinite"/>
+            </rect>
+            <rect x="-3" y="-13" width="112" height="26" rx="13" fill="none" stroke="url(#spotifyGrad)" stroke-width="2" opacity="0.5">
+                <animate attributeName="opacity" values="0.4;0.7;0.4" dur="2s" repeatCount="indefinite"/>
+            </rect>
             
-            <!-- Animated pulse dot -->
-            <circle cx="8" cy="0" r="4" fill="url(#spotifyGrad)">
-                <animate attributeName="r" values="4;5;4" dur="1.5s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="1;0.7;1" dur="1.5s" repeatCount="indefinite"/>
+            <!-- Pulsing indicator -->
+            <circle cx="9" cy="0" r="4.5" fill="#1fdf64">
+                <animate attributeName="r" values="4.5;5.5;4.5" dur="1.5s" repeatCount="indefinite"/>
             </circle>
-            <circle cx="8" cy="0" r="6" fill="url(#spotifyGrad)" opacity="0.3">
-                <animate attributeName="r" values="6;8;6" dur="1.5s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.3;0;0.3" dur="1.5s" repeatCount="indefinite"/>
+            <circle cx="9" cy="0" r="7" fill="#1fdf64" opacity="0.4">
+                <animate attributeName="r" values="7;10;7" dur="1.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.4;0;0.4" dur="1.5s" repeatCount="indefinite"/>
             </circle>
             
-            <text x="19" y="5.5" font-family="'Inter','SF Pro Display',system-ui,-apple-system,sans-serif" 
-                  font-size="11" font-weight="800" fill="#1ed760" letter-spacing="1.2">
+            <text x="21" y="6" font-family="'Inter','Segoe UI',system-ui,sans-serif" 
+                  font-size="11" font-weight="900" fill="#1fdf64" letter-spacing="1.3">
                 NOW PLAYING
             </text>
         </g>
         {% else %}
-        <g transform="translate(0, 22)">
-            <rect x="-2" y="-12" width="128" height="24" rx="12" fill="#21262d" opacity="0.6"/>
-            <rect x="-2" y="-12" width="128" height="24" rx="12" fill="none" stroke="url(#blueGrad)" stroke-width="1.5" opacity="0.2"/>
+        <g transform="translate(0, 23)">
+            <rect x="-3" y="-13" width="132" height="26" rx="13" fill="#1c2128" opacity="0.7"/>
+            <rect x="-3" y="-13" width="132" height="26" rx="13" fill="none" stroke="url(#blueGrad)" stroke-width="1.8" opacity="0.3"/>
             
             <!-- Clock icon -->
-            <g transform="translate(8, 0)">
-                <circle cx="0" cy="0" r="5" fill="none" stroke="#58a6ff" stroke-width="1.5" opacity="0.7"/>
-                <line x1="0" y1="0" x2="0" y2="-3" stroke="#58a6ff" stroke-width="1.5" opacity="0.7" stroke-linecap="round"/>
-                <line x1="0" y1="0" x2="2" y2="0" stroke="#58a6ff" stroke-width="1.5" opacity="0.7" stroke-linecap="round"/>
+            <g transform="translate(9, 0)" opacity="0.8">
+                <circle cx="0" cy="0" r="5.5" fill="none" stroke="#58a6ff" stroke-width="1.8"/>
+                <line x1="0" y1="0" x2="0" y2="-3.5" stroke="#58a6ff" stroke-width="1.8" stroke-linecap="round"/>
+                <line x1="0" y1="0" x2="2.5" y2="0" stroke="#58a6ff" stroke-width="1.8" stroke-linecap="round"/>
             </g>
             
-            <text x="19" y="5.5" font-family="'Inter','SF Pro Display',system-ui,-apple-system,sans-serif" 
-                  font-size="11" font-weight="700" fill="#58a6ff" letter-spacing="1.1" opacity="0.85">
+            <text x="21" y="6" font-family="'Inter','Segoe UI',system-ui,sans-serif" 
+                  font-size="11" font-weight="800" fill="#79c0ff" letter-spacing="1.2">
                 RECENTLY PLAYED
             </text>
         </g>
         {% endif %}
         
-        <!-- Track title - enhanced -->
-        <text x="0" y="62" font-family="'Inter','SF Pro Display',system-ui,-apple-system,sans-serif" 
-              font-size="21" font-weight="900" fill="#ffffff" letter-spacing="-0.5"
-              filter="url(#textShadow)">
-            {{ song_name[:27] }}{% if song_name|length > 27 %}...{% endif %}
+        <!-- Song title -->
+        <text x="0" y="64" font-family="'Inter','Segoe UI',system-ui,sans-serif" 
+              font-size="22" font-weight="900" fill="#ffffff" letter-spacing="-0.6"
+              filter="url(#textGlow)">
+            {{ song_name[:26] }}{% if song_name|length > 26 %}...{% endif %}
         </text>
         
-        <!-- Artist name - redesigned -->
-        <g transform="translate(0, 87)">
+        <!-- Artist -->
+        <g transform="translate(0, 90)">
             <!-- Artist icon -->
-            <g transform="translate(0, -10) scale(0.8)">
-                <circle cx="6" cy="6" r="5" fill="none" stroke="#8b949e" stroke-width="1.3" opacity="0.5"/>
-                <circle cx="6" cy="4" r="2" fill="#8b949e" opacity="0.5"/>
-                <path d="M2,9 Q2,7 6,7 Q10,7 10,9" fill="none" stroke="#8b949e" stroke-width="1.3" opacity="0.5"/>
+            <g transform="translate(1, -11) scale(0.85)" opacity="0.7">
+                <circle cx="6" cy="6" r="5.5" fill="none" stroke="#c9d1d9" stroke-width="1.5"/>
+                <circle cx="6" cy="4.5" r="2.2" fill="#c9d1d9"/>
+                <path d="M1.5,9 Q1.5,7 6,7 Q10.5,7 10.5,9" fill="none" stroke="#c9d1d9" stroke-width="1.5"/>
             </g>
-            <text x="18" y="0" font-family="'Inter','SF Pro Display',system-ui,-apple-system,sans-serif" 
-                  font-size="15" font-weight="600" fill="#8b949e" letter-spacing="-0.3">
-                {{ artist_name[:31] }}{% if artist_name|length > 31 %}...{% endif %}
+            <text x="20" y="0" font-family="'Inter','Segoe UI',system-ui,sans-serif" 
+                  font-size="16" font-weight="600" fill="#c9d1d9" letter-spacing="-0.4">
+                {{ artist_name[:30] }}{% if artist_name|length > 30 %}...{% endif %}
             </text>
         </g>
         
-        <!-- Enhanced equalizer bars -->
-        <g transform="translate(0, 107)">
-            {% for i in range(16) %}
-            <g transform="translate({{ i * 7.5 }}, 0)">
-                <!-- Bar container track -->
-                <rect x="0" y="0" width="4.5" height="18" rx="2.25" fill="#21262d" opacity="0.5"/>
+        <!-- Equalizer -->
+        <g transform="translate(0, 110)">
+            {% for i in range(17) %}
+            <g transform="translate({{ i * 7 }}, 0)">
+                <!-- Track -->
+                <rect x="0" y="0" width="4.2" height="17" rx="2.1" fill="#1c2128" opacity="0.7"/>
                 
-                <!-- Gradient for bar -->
+                <!-- Bar gradient -->
                 <defs>
-                    <linearGradient id="barGrad{{ i }}" x1="0%" y1="100%" x2="0%" y2="0%">
-                        <stop offset="0%" style="stop-color:rgb({{ bar_palette[i % 4][0] }}, {{ bar_palette[i % 4][1] }}, {{ bar_palette[i % 4][2] }});stop-opacity:0.7" />
-                        <stop offset="100%" style="stop-color:rgb({{ bar_palette[(i+1) % 4][0] }}, {{ bar_palette[(i+1) % 4][1] }}, {{ bar_palette[(i+1) % 4][2] }});stop-opacity:1" />
+                    <linearGradient id="bar{{ i }}" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" style="stop-color:rgb({{ bar_palette[i % 4][0] }}, {{ bar_palette[i % 4][1] }}, {{ bar_palette[i % 4][2] }});stop-opacity:0.8" />
+                        <stop offset="50%" style="stop-color:rgb({{ bar_palette[(i+1) % 4][0] }}, {{ bar_palette[(i+1) % 4][1] }}, {{ bar_palette[(i+1) % 4][2] }});stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:rgb({{ bar_palette[(i+2) % 4][0] }}, {{ bar_palette[(i+2) % 4][1] }}, {{ bar_palette[(i+2) % 4][2] }});stop-opacity:1" />
                     </linearGradient>
                 </defs>
                 
-                <!-- Animated bar with glow -->
-                <rect x="0" y="0" width="4.5" height="18" rx="2.25" 
-                      fill="url(#barGrad{{ i }})" filter="url(#barGlow)">
-                    <!-- Height animation -->
+                <!-- Animated bar -->
+                <rect x="0" y="0" width="4.2" height="17" rx="2.1" 
+                      fill="url(#bar{{ i }})" filter="url(#barGlow)">
                     <animate attributeName="height" 
-                             values="2;{{ 7 + (i % 5) * 2.5 }};3;{{ 11 + (i % 4) * 2 }};2" 
-                             dur="{{ 300 + (i * 32) }}ms" 
+                             values="2;{{ 6 + (i % 6) * 2 }};3;{{ 10 + (i % 5) * 2 }};2" 
+                             dur="{{ 280 + (i * 28) }}ms" 
                              repeatCount="indefinite"/>
-                    <!-- Y position animation -->
                     <animate attributeName="y" 
-                             values="16;{{ 11 - (i % 5) * 2.5 }};15;{{ 7 - (i % 4) * 2 }};16" 
-                             dur="{{ 300 + (i * 32) }}ms" 
+                             values="15;{{ 11 - (i % 6) * 2 }};14;{{ 7 - (i % 5) * 2 }};15" 
+                             dur="{{ 280 + (i * 28) }}ms" 
                              repeatCount="indefinite"/>
-                    <!-- Opacity pulse -->
                     <animate attributeName="opacity" 
-                             values="0.6;1;0.7;1;0.6" 
-                             dur="{{ 300 + (i * 32) }}ms" 
+                             values="0.7;1;0.8;1;0.7" 
+                             dur="{{ 280 + (i * 28) }}ms" 
                              repeatCount="indefinite"/>
                 </rect>
             </g>
@@ -200,15 +191,17 @@
         
     </g>
     
-    <!-- Spotify logo - refined -->
-    <g transform="translate(458, 18)">
-        <circle cx="0" cy="0" r="17" fill="#1DB954" opacity="0.08"/>
-        <circle cx="0" cy="0" r="14" fill="none" stroke="#1DB954" stroke-width="1.5" opacity="0.15"/>
-        <g transform="scale(0.7)" opacity="0.9">
-            <circle cx="0" cy="0" r="10" fill="none" stroke="#1DB954" stroke-width="1.8"/>
-            <path d="M-6.5,-3 Q0,-6.5 6.5,-3" stroke="#1DB954" stroke-width="2" stroke-linecap="round" fill="none"/>
-            <path d="M-6.5,0 Q0,-3 6.5,0" stroke="#1DB954" stroke-width="2" stroke-linecap="round" fill="none"/>
-            <path d="M-6.5,3 Q0,0.5 6.5,3" stroke="#1DB954" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <!-- Spotify logo -->
+    <g transform="translate(460, 17)">
+        <circle cx="0" cy="0" r="18" fill="#1db954" opacity="0.06">
+            <animate attributeName="opacity" values="0.06;0.12;0.06" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="0" cy="0" r="15" fill="none" stroke="#1db954" stroke-width="1.5" opacity="0.2"/>
+        <g transform="scale(0.75)">
+            <circle cx="0" cy="0" r="11" fill="none" stroke="#1fdf64" stroke-width="2" opacity="0.9"/>
+            <path d="M-7,-3.5 Q0,-7 7,-3.5" stroke="#1fdf64" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.95"/>
+            <path d="M-7,0 Q0,-3.5 7,0" stroke="#1fdf64" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.95"/>
+            <path d="M-7,3.5 Q0,0.5 7,3.5" stroke="#1fdf64" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.95"/>
         </g>
     </g>
     
