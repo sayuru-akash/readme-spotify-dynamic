@@ -1,42 +1,119 @@
 <svg width="480" height="133" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Background -->
-    <rect width="480" height="133" rx="5" fill="#{{ background_color }}" stroke="#{{ border_color }}" stroke-width="1"/>
+    <defs>
+        <!-- Gradient for background -->
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#{{ background_color }};stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#{{ background_color }};stop-opacity:0.95" />
+        </linearGradient>
+        
+        <!-- Shadow for album art -->
+        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+            <feOffset dx="0" dy="2" result="offsetblur"/>
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.4"/>
+            </feComponentTransfer>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        
+        <!-- Glow effect for equalizer bars -->
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        
+        <!-- Clip path for album art rounded corners -->
+        <clipPath id="albumClip">
+            <rect x="15" y="16.5" width="100" height="100" rx="8"/>
+        </clipPath>
+    </defs>
     
-    <!-- Album Art -->
-    <image x="15" y="16.5" width="100" height="100" href="data:image/png;base64,{{ image }}" preserveAspectRatio="xMidYMid slice">
-        <animate attributeName="opacity" values="0;1" dur="0.3s" fill="freeze"/>
-    </image>
+    <!-- Background with gradient -->
+    <rect width="480" height="133" rx="8" fill="url(#bgGrad)" stroke="#{{ border_color }}" stroke-width="1.5"/>
     
-    <!-- Song Title -->
-    <text x="130" y="45" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="16" font-weight="600" fill="rgb({{ song_palette[1][0] }}, {{ song_palette[1][1] }}, {{ song_palette[1][2] }})">
-        {{ track_name | truncate(30) | e }}
-    </text>
+    <!-- Album Art with shadow and rounded corners -->
+    <g filter="url(#shadow)">
+        <rect x="15" y="16.5" width="100" height="100" rx="8" fill="#000" opacity="0.1"/>
+        <image x="15" y="16.5" width="100" height="100" href="data:image/png;base64,{{ image }}" 
+               preserveAspectRatio="xMidYMid slice" clip-path="url(#albumClip)">
+            <animate attributeName="opacity" values="0;1" dur="0.4s" fill="freeze"/>
+        </image>
+    </g>
     
-    <!-- Artist Name -->
-    <text x="130" y="68" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="13" fill="rgb({{ song_palette[0][0] }}, {{ song_palette[0][1] }}, {{ song_palette[0][2] }})" opacity="0.8">
-        {{ artist_name | truncate(35) | e }}
-    </text>
+    <!-- Spotify Icon (top right) -->
+    <g transform="translate(445, 20)">
+        <circle cx="0" cy="0" r="12" fill="#1DB954" opacity="0.9"/>
+        <path d="M-6,-2 Q0,-5 6,-2 M-6,0 Q0,-2 6,0 M-6,2 Q0,0 6,2" 
+              stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    </g>
     
-    <!-- Status (if enabled) -->
-    {% if show_status %}
-    <text x="130" y="90" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" fill="rgb({{ song_palette[1][0] }}, {{ song_palette[1][1] }}, {{ song_palette[1][2] }})" opacity="0.7">
-        {{ status }}
-    </text>
+    <!-- Playing status indicator -->
+    {% if is_playing %}
+    <g transform="translate(130, 20)">
+        <circle cx="0" cy="0" r="3" fill="#1DB954">
+            <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+        <text x="8" y="4" font-family="'Segoe UI',system-ui,-apple-system,sans-serif" 
+              font-size="11" font-weight="500" fill="#1DB954" opacity="0.9">
+            Now Playing
+        </text>
+    </g>
+    {% else %}
+    <g transform="translate(130, 20)">
+        <circle cx="0" cy="0" r="3" fill="#aaa"/>
+        <text x="8" y="4" font-family="'Segoe UI',system-ui,-apple-system,sans-serif" 
+              font-size="11" font-weight="500" fill="#aaa" opacity="0.7">
+            Recently Played
+        </text>
+    </g>
     {% endif %}
     
-    <!-- Animated Equalizer Bars -->
-    <g transform="translate(130, 95)">
-        {% for i in range(8) %}
-        <rect x="{{ i * 12 }}" y="0" width="8" height="20" rx="2" fill="rgb({{ bar_palette[i % 4][0] }}, {{ bar_palette[i % 4][1] }}, {{ bar_palette[i % 4][2] }})" opacity="0.8">
+    <!-- Song Title with better contrast -->
+    <text x="130" y="50" font-family="'Segoe UI',system-ui,-apple-system,sans-serif" 
+          font-size="17" font-weight="700" fill="#fff" letter-spacing="0.3">
+        {{ track_name[:32] }}{% if track_name|length > 32 %}...{% endif %}
+    </text>
+    
+    <!-- Artist Name with icon -->
+    <g transform="translate(130, 75)">
+        <circle cx="0" cy="-3" r="2" fill="#b3b3b3" opacity="0.6"/>
+        <text x="8" y="0" font-family="'Segoe UI',system-ui,-apple-system,sans-serif" 
+              font-size="14" font-weight="400" fill="#b3b3b3">
+            {{ artist_name[:36] }}{% if artist_name|length > 36 %}...{% endif %}
+        </text>
+    </g>
+    
+    <!-- Animated Equalizer Bars with glow -->
+    <g transform="translate(130, 98)" filter="url(#glow)">
+        {% for i in range(10) %}
+        <rect x="{{ i * 10 }}" y="0" width="6" height="20" rx="3" 
+              fill="rgb({{ bar_palette[i % 4][0] }}, {{ bar_palette[i % 4][1] }}, {{ bar_palette[i % 4][2] }})" 
+              opacity="0.85">
             <animate attributeName="height" 
-                     values="5;20;8;20;5" 
-                     dur="{{ (500 + (i * 50)) }}ms" 
+                     values="4;{{ 12 + (i % 3) * 3 }};6;{{ 15 + (i % 4) * 2 }};4" 
+                     dur="{{ 400 + (i * 70) }}ms" 
                      repeatCount="indefinite"/>
             <animate attributeName="y" 
-                     values="15;0;12;0;15" 
-                     dur="{{ (500 + (i * 50)) }}ms" 
+                     values="16;{{ 8 - (i % 3) * 3 }};14;{{ 5 - (i % 4) * 2 }};16" 
+                     dur="{{ 400 + (i * 70) }}ms" 
+                     repeatCount="indefinite"/>
+            <animate attributeName="opacity" 
+                     values="0.85;1;0.85" 
+                     dur="{{ 400 + (i * 70) }}ms" 
                      repeatCount="indefinite"/>
         </rect>
         {% endfor %}
     </g>
+    
+    <!-- Footer text -->
+    <text x="240" y="127" font-family="'Segoe UI',system-ui,-apple-system,sans-serif" 
+          font-size="9" fill="#666" text-anchor="middle" opacity="0.5">
+        Powered by Spotify
+    </text>
 </svg>
