@@ -312,6 +312,7 @@ def make_svg(
         "energy": energy,
         "danceability": danceability,
         # Track info
+        "is_playing": is_playing,
         "artist_name": artist_name,
         "song_name": song_name,
         "song_uri": track_data.get("track_url", ""),
