@@ -14,7 +14,7 @@
 🔄 **Real-time Updates** • Shows currently playing or recently played tracks  
 🎭 **Dynamic Colors** • Auto-extracts colors from album artwork  
 ⚡ **Pure SVG** • Fast, lightweight, and GitHub README compatible  
-🎵 **Audio Reactive** • Bars sync with track BPM and energy  
+🎵 **Audio Reactive** • Bars sync with track BPM and energy
 
 ---
 
@@ -39,12 +39,12 @@ Personalize your widget with URL parameters:
 ?background_color=0d1117&border_color=1DB954&show_status=true
 ```
 
-| Parameter | Description | Example |
-|-----------|-------------|---------|
-| `background_color` | Hex color (without #) | `0d1117` |
-| `border_color` | Border hex color | `1DB954` |
-| `background_type` | `color` / `blur_dark` / `blur_light` | `color` |
-| `show_status` | Display status text | `true` |
+| Parameter          | Description                          | Example  |
+| ------------------ | ------------------------------------ | -------- |
+| `background_color` | Hex color (without #)                | `0d1117` |
+| `border_color`     | Border hex color                     | `1DB954` |
+| `background_type`  | `color` / `blur_dark` / `blur_light` | `color`  |
+| `show_status`      | Display status text                  | `true`   |
 
 ---
 
@@ -59,7 +59,7 @@ Personalize your widget with URL parameters:
 ### 💡 Credits & License
 
 **Original Creator:** [Andrew Novac](https://github.com/novatorem) ([novatorem/novatorem](https://github.com/novatorem/novatorem))  
-**Fork Maintainer:** [Sayuru Akash](https://github.com/sayuru-akash)  
+**Fork Maintainer:** [Sayuru Akash](https://github.com/sayuru-akash)
 
 This project is a fork with enhanced GitHub-compatible SVG rendering and design improvements.  
 Licensed under [The Unlicense](LICENSE) - Free to use, modify, and distribute ♥️
